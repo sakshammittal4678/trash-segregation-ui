@@ -96,7 +96,8 @@ def get_preds(image_data, model):
     # Get top 5 predictions
     top_5_indexes = np.argsort(preds[0])[-5:][::-1]
     top_5_preds = [UNIQUE_LABELS[i] for i in top_5_indexes]
-    return top_5_preds
+    top_5_conf = [preds[i] for i in top_5_indexes]
+    return top_5_preds,top_5_conf
 
 # --- Streamlit App UI ---
 st.title("♻️ Trash Segregation Classifier")
@@ -117,10 +118,10 @@ if uploaded_file is not None:
 
     # Classify the image
     st.write("Classifying...")
-    top_predictions = get_preds(image, model)
+    top_predictions,top_conf = get_preds(image, model)
 
     # Display the results
-    st.success(f"**Top Prediction:** {top_predictions[0]}")
+    st.success(f"**Top Prediction:** {top_predictions[0]} , **Confidence :** {top_conf[0]}")
     st.write("**Other Possibilities:**")
     for pred in top_predictions[1:]:
         st.write(f"- {pred}")
