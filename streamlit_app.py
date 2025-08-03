@@ -10,19 +10,24 @@ import numpy as np
 @st.cache_resource
 def load_my_model():
     """Loads and caches the Keras model."""
-    model_path = 'trash-segregation/models/20250731-12051753963551-inception_v3-full-image-set-3.h5'
+    model_path = 'models/20250731-12051753963551-inception_v3-full-image-set-3.h5'
     model = tf.keras.models.load_model(model_path, compile=False)
     # The 'compile=False' argument is often helpful for inference-only models.
     return model
 
 # Define the labels your model can predict
 # IMPORTANT: Make sure the order matches your model's training output
-UNIQUE_LABELS = [
-    'cardboard', 'e-waste', 'glass', 'medical', 'metal',
-    'paper', 'plastic', 'shoes', 'clothes', 'biological',
-    'battery', 'trash'
-    # Add all your class labels here in the correct order
-]
+UNIQUE_LABELS = ['aerosol_cans', 'aluminum_food_cans', 'aluminum_soda_cans',
+       'cardboard_boxes', 'cardboard_packaging', 'clothing',
+       'coffee_grounds', 'disposable_plastic_cutlery', 'eggshells',
+       'food_waste', 'glass_beverage_bottles',
+       'glass_cosmetic_containers', 'glass_food_jars', 'magazines',
+       'newspaper', 'office_paper', 'paper_cups', 'plastic_cup_lids',
+       'plastic_detergent_bottles', 'plastic_food_containers',
+       'plastic_shopping_bags', 'plastic_soda_bottles', 'plastic_straws',
+       'plastic_trash_bags', 'plastic_water_bottles', 'shoes',
+       'steel_food_cans', 'styrofoam_cups', 'styrofoam_food_containers',
+       'tea_bags']
 
 # --- Prediction Function ---
 def get_preds(image_data, model):
