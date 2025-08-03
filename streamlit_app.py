@@ -84,7 +84,8 @@ def get_preds(image_data, model):
     """Takes an image, preprocesses it, and returns the top 5 predictions."""
     # Preprocess the image to fit your model's input requirements
     # (e.g., resizing to 224x224, normalizing)
-    image = image_data.resize((224, 224)) # Adjust size as per your model
+    image = image_data.convert('RGB')
+    image = image.resize((299,299)) # Adjust size as per your model
     image = np.array(image)
     image = np.expand_dims(image, axis=0) # Add batch dimension
     image = tf.keras.applications.inception_v3.preprocess_input(image) # Preprocess for InceptionV3
