@@ -121,7 +121,7 @@ if uploaded_file is not None:
     top_predictions,top_conf = get_preds(image, model)
 
     # Display the results
-    st.success(f"**Top Prediction:** {top_predictions[0]} , **Confidence :** {.2ftop_conf[0]*100}%")
+    st.success(f"**Top Prediction:** {top_predictions[0]} , **Confidence :** {top_conf[0]*100:.2f}%")
     st.write("**Other Possibilities:**")
     for pred in top_predictions[1:]:
         st.write(f"- {pred}")
