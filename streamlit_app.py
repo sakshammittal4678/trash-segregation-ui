@@ -96,7 +96,7 @@ def get_preds(image_data, model):
     # Get top 5 predictions
     top_5_indexes = np.argsort(preds[0])[-5:][::-1]
     top_5_preds = [UNIQUE_LABELS[i] for i in top_5_indexes]
-    top_5_conf = [preds[i] for i in top_5_indexes]
+    top_5_conf = [preds[0][i] for i in top_5_indexes]
     return top_5_preds,top_5_conf
 
 # --- Streamlit App UI ---
