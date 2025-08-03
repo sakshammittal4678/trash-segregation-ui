@@ -7,6 +7,56 @@ import numpy as np
 
 # --- Model Loading and Caching ---
 # Use st.cache_resource to load the model only once
+
+# Creating a generalised function that does this
+
+#define image size
+IMG_SIZE=299
+
+def process_image(image_path):
+  #Read the file
+  image=tf.io.read_file(image_path)
+
+  #Turn the image into tensor with 3 channels(RGB)
+  image=tf.image.decode_jpeg(image,channels=3)
+
+  #Convert the colour channels to (0,1)
+  # image=tf.image.convert_image_dtype(image,tf.float32)
+
+  #Resize the image to (224,224)
+  image=tf.image.resize(image,size=[IMG_SIZE,IMG_SIZE])
+
+  return image
+
+#Creating a function to return a Tensor Tuples
+def create_tuples(image_path,label):
+  image=process_image(image_path)
+  return image,label
+
+#Creating a function that return data batches
+BATCH_SIZE=32
+def create_batches(x,y=None,batch_size=BATCH_SIZE,valid_set=False,test_set=False):
+  if test_set:
+    print("Creating test data batches...")
+    data=tf.data.Dataset.from_tensor_slices((tf.constant(x))) #Only for x as no labels for test set
+    data=data.map(process_image)
+    data_batch=data.batch(batch_size)
+    return data_batch
+  elif valid_set:
+    print("Creating valid set batches...")
+    data=tf.data.Dataset.from_tensor_slices((tf.constant(x),tf.constant(y)))
+    data=data.map(create_tuples)
+    data_batch=data.batch(batch_size)
+    return data_batch
+  else:
+    print("Creating training set batches...")
+    data=tf.data.Dataset.from_tensor_slices((tf.constant(x),tf.constant(y)))
+    data=data.shuffle(buffer_size=len(x))
+    data=data.map(create_tuples)
+    data_batch=data.batch(batch_size)
+  return data_batch
+
+
 @st.cache_resource
 def load_my_model():
     """Loads and caches the Keras model."""
@@ -62,6 +112,7 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption='Uploaded Image.', use_column_width=True)
     st.write("")
+    st.write(uploaded_file)
 
     # Classify the image
     st.write("Classifying...")
